@@ -27,7 +27,6 @@ public class UpperPasswordCase {
     }
 
     /**
-     *
      * @param attempt
      * @param path
      * @return
@@ -36,11 +35,26 @@ public class UpperPasswordCase {
     public File openFile(String attempt, String path) throws IOException {
         File file = new File (path);
         if (file.exists ( )) {
-            BufferedReader br = new BufferedReader (new FileReader (file));
+
             BufferedWriter bw = new BufferedWriter (new FileWriter (this.fileToWrite));
-            String line = br.readLine ( );
-            while (line != null) {
-                String coso = "";
+            String coso = readFile (file, bw);//Llama al método para guardar
+            bw.write (coso);
+            bw.close ( );
+        }
+        return file;
+    }
+
+
+
+    public String readFile(File file, BufferedWriter bw) {
+        BufferedReader br = null;
+        String line;
+        String coso = "";
+        try {
+
+            do {
+                br = new BufferedReader (new FileReader (file));
+                line = br.readLine ( );
                 coso += line.toCharArray ( )[0];
                 coso = coso.toUpperCase ( );
                 coso += line.toCharArray ( )[1];
@@ -53,12 +67,17 @@ public class UpperPasswordCase {
                         coso += line.toCharArray ( )[i];
                     }
                 }
-                bw.write (coso);
-                line = br.readLine ( );
+            } while (line != null);
+        } catch (IOException r) {
+            //Falla al leer linea y guardarla en el String
+        } finally {
+            try {
+                if (br != null)
+                    br.close ( );
+            } catch (IOException e) {
+                //Falla al cerrar el BufferedReader
             }
-            bw.close ( );
-            br.close ( );
         }
-        return file;
+        return coso;
     }
 }
